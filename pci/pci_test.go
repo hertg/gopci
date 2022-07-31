@@ -3,7 +3,7 @@ package pci_test
 import (
 	"testing"
 
-	"github.com/hertg/go-readpci/pci"
+	"github.com/hertg/gopci/pci"
 )
 
 func TestMain(t *testing.T) {

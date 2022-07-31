@@ -1,1 +1,1 @@
-# go-readpci
+# gopci

@@ -1,4 +1,4 @@
-module github.com/hertg/go-readpci
+module github.com/hertg/gopci
 
 go 1.18
 
