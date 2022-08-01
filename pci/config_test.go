@@ -2,7 +2,6 @@ package pci_test
 
 import (
 	"bytes"
-	"fmt"
 	"testing"
 
 	"github.com/hertg/gopci/pci"
@@ -45,6 +44,4 @@ func TestConfigParse(t *testing.T) {
 	assert.Equal(t, uint16(0x1002), config.Common.VendorID)
 	assert.Equal(t, uint16(0x73bf), config.Common.DeviceID)
 	assert.Equal(t, uint8(0xc0), config.Common.Revision)
-
-	fmt.Printf("%+v\n", config)
 }

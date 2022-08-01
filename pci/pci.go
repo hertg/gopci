@@ -1,26 +1,69 @@
 package pci
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 	"path/filepath"
+
+	"github.com/hertg/go-pciids/pkg/pciids"
 )
 
 const pciPath = "/sys/bus/pci/devices"
 
-type Device struct {
-	address Address
-	config  Config
-	driver  string
+type Class struct {
+	class    uint8
+	subclass uint8
+	label    string
 }
 
-func Scan() ([]*Device, error) {
+type Vendor struct {
+	id    uint16
+	label string
+}
+
+type Device struct {
+	id    uint16
+	label string
+}
+
+type Subvendor struct {
+	id    uint16
+	label string
+}
+
+type Subdevice struct {
+	id    uint16
+	label string
+}
+
+type GPU struct {
+	address   Address
+	config    Config
+	driver    string
+	class     Class
+	vendor    Vendor
+	device    Device
+	subvendor Subvendor
+	subdevice Subdevice
+}
+
+var db *pciids.DB
+
+func init() {
+	filepath := "/usr/share/hwdata/pci.ids"
+	file, _ := os.Open(filepath)
+	scanner := bufio.NewScanner(file)
+	db, _ = pciids.NewDB(scanner)
+}
+
+func Scan() ([]*GPU, error) {
 	files, err := os.ReadDir(pciPath)
 	if err != nil {
 		panic(err)
 	}
 
-	var devices []*Device
+	var devices []*GPU
 
 	for _, dir := range files {
 		dev, err := ScanDevice(dir.Name())
@@ -33,7 +76,7 @@ func Scan() ([]*Device, error) {
 	return devices, nil
 }
 
-func ScanDevice(hexAddr string) (*Device, error) {
+func ScanDevice(hexAddr string) (*GPU, error) {
 	path := filepath.Join(pciPath, hexAddr)
 	addr := AddrFromHex(hexAddr)
 
@@ -52,9 +95,20 @@ func ScanDevice(hexAddr string) (*Device, error) {
 		driver = filepath.Base(driver)
 	}
 
-	fmt.Printf("%s\n%+v\n%+v\n\n", addr.Hex(), config, driver)
+	v := db.Vendors[pciids.VendorID(config.Common.VendorID)]
+	vendor := Vendor{
+		id:    uint16(v.ID),
+		label: v.Label,
+	}
 
-	return &Device{
+	d := db.Devices[pciids.DeviceID(vendor.id<<16|config.Common.DeviceID)]
+	device := Device{
+		id:    uint16(d.ID & 0b11111111),
+		label: d.Label,
+	}
+	fmt.Printf("%s\n%+v\n%+v\n%+v\n%+v\n\n", addr.Hex(), config, driver, vendor, device)
+
+	return &GPU{
 		address: addr,
 		config:  config,
 		driver:  driver,
