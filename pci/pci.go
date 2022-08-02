@@ -12,40 +12,40 @@ import (
 const pciPath = "/sys/bus/pci/devices"
 
 type Class struct {
-	class    uint8
-	subclass uint8
-	label    string
+	Class    uint8
+	Subclass uint8
+	Label    string
 }
 
 type Vendor struct {
-	id    uint16
+	ID    uint16
 	label string
 }
 
 type Device struct {
-	id    uint16
-	label string
+	ID    uint16
+	Label string
 }
 
 type Subvendor struct {
-	id    uint16
-	label string
+	ID    uint16
+	Label string
 }
 
 type Subdevice struct {
-	id    uint16
-	label string
+	ID    uint16
+	Label string
 }
 
 type GPU struct {
-	address   Address
-	config    Config
-	driver    string
-	class     Class
-	vendor    Vendor
-	device    Device
-	subvendor Subvendor
-	subdevice Subdevice
+	Address   Address
+	Config    Config
+	Driver    string
+	Class     Class
+	Vendor    Vendor
+	Device    Device
+	Subvendor Subvendor
+	Subdevice Subdevice
 }
 
 var db *pciids.DB
@@ -78,12 +78,13 @@ func Scan() ([]*GPU, error) {
 
 func ScanDevice(hexAddr string) (*GPU, error) {
 	path := filepath.Join(pciPath, hexAddr)
-	addr := AddrFromHex(hexAddr)
+	addr, _ := AddrFromHex(hexAddr)
 
 	configFile, err := os.Open(filepath.Join(path, "config"))
 	if err != nil {
 		return nil, fmt.Errorf("unable to open config file of '%s': %s", hexAddr, err)
 	}
+	defer configFile.Close()
 	config := ParseConfig(configFile)
 
 	driverPath := filepath.Join(path, "driver")
@@ -93,24 +94,45 @@ func ScanDevice(hexAddr string) (*GPU, error) {
 	}
 	if driver != "" {
 		driver = filepath.Base(driver)
+	} else {
+		driver = "-"
 	}
 
-	v := db.Vendors[pciids.VendorID(config.Common.VendorID)]
+	class := Class{
+		Class:    config.Common.Class,
+		Subclass: config.Common.Subclass,
+		Label:    fmt.Sprintf("Class %x", config.Common.Class),
+	}
+	cl := db.FindSubclass(uint16(config.Common.Class)<<8 | uint16(config.Common.Subclass))
+	if cl != nil {
+		class.Label = *cl
+	}
+
+	v := db.Vendors[config.Common.VendorID]
 	vendor := Vendor{
-		id:    uint16(v.ID),
-		label: v.Label,
+		ID:    config.Common.VendorID,
+		label: fmt.Sprintf("Vendor %2.x", config.Common.VendorID),
+	}
+	if v != nil {
+		vendor.label = v.Label
 	}
 
-	d := db.Devices[pciids.DeviceID(vendor.id<<16|config.Common.DeviceID)]
+	d := db.Devices[uint32(vendor.ID)<<16|uint32(config.Common.DeviceID)]
 	device := Device{
-		id:    uint16(d.ID & 0b11111111),
-		label: d.Label,
+		ID:    config.Common.DeviceID,
+		Label: fmt.Sprintf("Device %2.x", config.Common.DeviceID),
 	}
-	fmt.Printf("%s\n%+v\n%+v\n%+v\n%+v\n\n", addr.Hex(), config, driver, vendor, device)
+	if d != nil {
+		device.Label = d.Label
+	}
+
+	// fmt.Printf("%s\t%s\n\t\t%s\n\t\t%s\n\t\t%s\n", addr.Hex(), class.Label, device.Label, vendor.label, driver)
+	// fmt.Println()
+	// fmt.Printf("%s\n%+v\n%+v\n%+v\n%+v\n\n", addr.Hex(), config, driver, vendor, device)
 
 	return &GPU{
-		address: addr,
-		config:  config,
-		driver:  driver,
+		Address: *addr,
+		Config:  config,
+		Driver:  driver,
 	}, nil
 }
