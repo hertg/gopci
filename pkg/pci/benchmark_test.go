@@ -3,7 +3,7 @@ package pci_test
 import (
 	"testing"
 
-	"github.com/hertg/gopci/pci"
+	"github.com/hertg/gopci/pkg/pci"
 	"github.com/jaypipes/ghw"
 )
 

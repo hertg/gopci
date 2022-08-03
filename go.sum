@@ -9,6 +9,8 @@ github.com/go-ole/go-ole v1.2.5/go.mod h1:pprOEPIfldk/42T2oK7lQ4v4JSDwmV0As9GaiU
 github.com/go-ole/go-ole v1.2.6 h1:/Fpf6oFPoeFik9ty7siob0G6Ke8QvQEuVcuChpwXzpY=
 github.com/go-ole/go-ole v1.2.6/go.mod h1:pprOEPIfldk/42T2oK7lQ4v4JSDwmV0As9GaiUsvbm0=
 github.com/go-playground/assert v1.2.1 h1:ad06XqC+TOv0nJWnbULSlh3ehp5uLuQEojZY5Tq8RgI=
+github.com/hertg/go-pciids v0.0.0-20220802201653-2679415a7941 h1:c2AvY5yHnNGiQL26lpIJ9lS7eY2ughOHXkL88ySvUYY=
+github.com/hertg/go-pciids v0.0.0-20220802201653-2679415a7941/go.mod h1:MDwmO0hDtJGssaw31xD8XfHmrGWdUY3A/AEq5wJx09A=
 github.com/inconshreveable/mousetrap v1.0.0/go.mod h1:PxqpIevigyE2G7u3NXJIT2ANytuPF1OarO4DADm73n8=
 github.com/jaypipes/ghw v0.9.0 h1:TWF4wNIGtZcgDJaiNcFgby5BR8s2ixcUe0ydxNO2McY=
 github.com/jaypipes/ghw v0.9.0/go.mod h1:dXMo19735vXOjpIBDyDYSp31sB2u4hrtRCMxInqQ64k=

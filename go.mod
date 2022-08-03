@@ -2,10 +2,10 @@ module github.com/hertg/gopci
 
 go 1.18
 
-replace github.com/hertg/go-pciids => /home/michael/repos/go-pciids
+//replace github.com/hertg/go-pciids => /home/michael/repos/go-pciids
 
 require (
-	github.com/hertg/go-pciids v0.0.0-20220801203345-55cebdf6bc86
+	github.com/hertg/go-pciids v0.0.0-20220802201653-2679415a7941
 	github.com/jaypipes/ghw v0.9.0
 	github.com/stretchr/testify v1.8.0
 )

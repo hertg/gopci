@@ -1,10 +1,10 @@
-package pci_test
+package header_test
 
 import (
 	"bytes"
 	"testing"
 
-	"github.com/hertg/gopci/pci"
+	"github.com/hertg/gopci/pkg/header"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -37,11 +37,11 @@ var testDevice = map[string][]byte{
 
 func TestConfigParse(t *testing.T) {
 	reader := bytes.NewReader(testDevice["config"])
-	config := pci.ParseConfig(reader)
+	config := header.Parse(reader)
 
-	assert.Equal(t, uint8(0x03), config.Common.Class)
-	assert.Equal(t, uint8(0x00), config.Common.Subclass)
-	assert.Equal(t, uint16(0x1002), config.Common.VendorID)
-	assert.Equal(t, uint16(0x73bf), config.Common.DeviceID)
-	assert.Equal(t, uint8(0xc0), config.Common.Revision)
+	assert.Equal(t, uint8(0x03), config.ClassCode())
+	assert.Equal(t, uint8(0x00), config.SubclassCode())
+	assert.Equal(t, uint16(0x1002), config.VendorID())
+	assert.Equal(t, uint16(0x73bf), config.DeviceID())
+	assert.Equal(t, uint8(0xc0), config.Revision())
 }
