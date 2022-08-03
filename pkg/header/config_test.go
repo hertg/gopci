@@ -2,6 +2,7 @@ package header_test
 
 import (
 	"bytes"
+	"fmt"
 	"testing"
 
 	"github.com/hertg/gopci/pkg/header"
@@ -38,6 +39,8 @@ var testDevice = map[string][]byte{
 func TestConfigParse(t *testing.T) {
 	reader := bytes.NewReader(testDevice["config"])
 	config := header.Parse(reader)
+
+	fmt.Printf("%+v\n", config)
 
 	assert.Equal(t, uint8(0x03), config.ClassCode())
 	assert.Equal(t, uint8(0x00), config.SubclassCode())

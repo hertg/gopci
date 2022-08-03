@@ -36,8 +36,8 @@ type Device struct {
 	Class     Class
 	Vendor    Vendor
 	Device    Product
-	Subvendor Vendor
-	Subdevice Product
+	Subvendor *Vendor
+	Subdevice *Product
 }
 
 var db *pciids.DB
@@ -62,6 +62,7 @@ func Scan() ([]*Device, error) {
 		if err != nil {
 			panic(err)
 		}
+		fmt.Printf("%+v\n\n", dev)
 		devices = append(devices, dev)
 	}
 
@@ -89,6 +90,8 @@ func ScanDevice(hexAddr string) (*Device, error) {
 	} else {
 		driver = "-"
 	}
+
+	fmt.Println(config)
 
 	class := Class{
 		Class:    config.ClassCode(),
@@ -122,9 +125,29 @@ func ScanDevice(hexAddr string) (*Device, error) {
 	// fmt.Println()
 	// fmt.Printf("%s\n%+v\n%+v\n%+v\n%+v\n\n", addr.Hex(), config, driver, vendor, device)
 
-	return &Device{
+	res := &Device{
 		Address: *addr,
 		Config:  config,
 		Driver:  driver,
-	}, nil
+		Device:  device,
+		Vendor:  vendor,
+		Class:   class,
+	}
+
+	if c, ok := config.(*header.StandardHeader); ok {
+		sv := &Vendor{
+			ID:    c.SubsystemVendorID,
+			label: fmt.Sprintf("Subvendor %04x", c.SubsystemVendorID),
+		}
+		res.Subvendor = sv
+
+		sp := &Product{
+			ID:    c.SubsystemDeviceID,
+			Label: fmt.Sprintf("Subdevice %04x", c.SubsystemDeviceID),
+		}
+		fmt.Println(sp)
+		res.Subdevice = sp
+	}
+
+	return res, nil
 }
