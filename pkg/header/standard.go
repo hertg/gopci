@@ -32,6 +32,14 @@ func (s *StandardHeader) VendorID() uint16 {
 	return s.CommonHeader.VendorID
 }
 
+func (s *StandardHeader) Status() uint16 {
+	return s.CommonHeader.Status
+}
+
+func (s *StandardHeader) Command() uint16 {
+	return s.CommonHeader.Command
+}
+
 func (s *StandardHeader) ClassCode() uint8 {
 	return s.CommonHeader.Class
 }

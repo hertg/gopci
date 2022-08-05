@@ -52,46 +52,40 @@ func init() {
 func Scan() ([]*Device, error) {
 	files, err := os.ReadDir(pciPath)
 	if err != nil {
-		panic(err)
+		return nil, fmt.Errorf("got error while reading '%s': %s", pciPath, err)
 	}
-
 	var devices []*Device
-
 	for _, dir := range files {
 		dev, err := ScanDevice(dir.Name())
 		if err != nil {
-			panic(err)
+			return nil, fmt.Errorf("got error while scanning device '%s': %s", dir.Name(), err)
 		}
-		fmt.Printf("%+v\n\n", dev)
 		devices = append(devices, dev)
 	}
-
 	return devices, nil
 }
 
 func ScanDevice(hexAddr string) (*Device, error) {
 	path := filepath.Join(pciPath, hexAddr)
-	addr, _ := addr.AddrFromHex(hexAddr)
+	addr, err := addr.AddrFromHex(hexAddr)
+	if err != nil {
+		return nil, err
+	}
 
 	configFile, err := os.Open(filepath.Join(path, "config"))
 	if err != nil {
 		return nil, fmt.Errorf("unable to open config file of '%s': %s", hexAddr, err)
 	}
 	defer configFile.Close()
-	config := header.Parse(configFile)
-
-	driverPath := filepath.Join(path, "driver")
-	driver, err := filepath.EvalSymlinks(driverPath)
-	if err != nil && !os.IsNotExist(err) {
-		return nil, fmt.Errorf("unable to evaluate driver symlink of '%s': %s", hexAddr, err)
-	}
-	if driver != "" {
-		driver = filepath.Base(driver)
-	} else {
-		driver = "-"
+	config, err := header.Parse(configFile)
+	if err != nil {
+		return nil, err
 	}
 
-	fmt.Println(config)
+	driver, err := getDriver(path)
+	if err != nil {
+		return nil, err
+	}
 
 	class := Class{
 		Class:    config.ClassCode(),

@@ -38,6 +38,14 @@ func (s *PciToCardbusBridgeHeader) VendorID() uint16 {
 	return s.CommonHeader.VendorID
 }
 
+func (s *PciToCardbusBridgeHeader) Status() uint16 {
+	return s.CommonHeader.Status
+}
+
+func (s *PciToCardbusBridgeHeader) Command() uint16 {
+	return s.CommonHeader.Command
+}
+
 func (s *PciToCardbusBridgeHeader) ClassCode() uint8 {
 	return s.CommonHeader.Class
 }
