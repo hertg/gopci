@@ -17,13 +17,13 @@
 ## Description
 
 This library provides methods to get PCI information on a linux system.
-Similar projects with a wider featureset like [jaypipes/ghw](https://github.com/jaypipes/pcidb) exist,
+Similar projects with a wider featureset like [jaypipes/ghw](https://github.com/jaypipes/ghw) exist,
 but I needed a library that focuses only on PCI and provides methods that
 assist in getting even more custom information.
 
 If you are looking for a library to parse specifically PCI Devices,
 you will get a **significant performance benefit** by using this library (see [comparison](#Comparison)). If you need
-to parse more than just PCI information, consider using [jaypipes/ghw](https://github.com/jaypipes/pcidb).
+to parse more than just PCI information, consider using [jaypipes/ghw](https://github.com/jaypipes/ghw).
 
 ## Usage
 
@@ -63,7 +63,7 @@ allocationis and significantly improves performance.
 
 It has been found that this library parses at more
 than 10x the speed while using 50x less memory compared to
-[jaypipes/ghw](https://github.com/jaypipes/pcidb).
+[jaypipes/ghw](https://github.com/jaypipes/ghw).
 
 ```text
 goos: linux
