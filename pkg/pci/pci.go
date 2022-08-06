@@ -29,17 +29,6 @@ type Product struct {
 	Label string
 }
 
-type Device struct {
-	Address   addr.Address
-	Config    header.IConfig
-	Driver    string
-	Class     Class
-	Vendor    Vendor
-	Device    Product
-	Subvendor *Vendor
-	Subdevice *Product
-}
-
 var db *pciids.DB
 
 func init() {
@@ -49,7 +38,7 @@ func init() {
 	db, _ = pciids.NewDB(scanner)
 }
 
-func Scan() ([]*Device, error) {
+func Scan(filters ...func(*Device) bool) ([]*Device, error) {
 	files, err := os.ReadDir(pciPath)
 	if err != nil {
 		return nil, fmt.Errorf("got error while reading '%s': %s", pciPath, err)
@@ -60,7 +49,16 @@ func Scan() ([]*Device, error) {
 		if err != nil {
 			return nil, fmt.Errorf("got error while scanning device '%s': %s", dir.Name(), err)
 		}
-		devices = append(devices, dev)
+		skip := false
+		for _, filter := range filters {
+			if !filter(dev) {
+				skip = true
+				continue
+			}
+		}
+		if !skip {
+			devices = append(devices, dev)
+		}
 	}
 	return devices, nil
 }
@@ -115,14 +113,10 @@ func ScanDevice(hexAddr string) (*Device, error) {
 		device.Label = d.Label
 	}
 
-	// fmt.Printf("%s\t%s\n\t\t%s\n\t\t%s\n\t\t%s\n", addr.Hex(), class.Label, device.Label, vendor.label, driver)
-	// fmt.Println()
-	// fmt.Printf("%s\n%+v\n%+v\n%+v\n%+v\n\n", addr.Hex(), config, driver, vendor, device)
-
 	res := &Device{
 		Address: *addr,
 		Config:  config,
-		Driver:  driver,
+		Driver:  *driver,
 		Device:  device,
 		Vendor:  vendor,
 		Class:   class,
@@ -139,7 +133,6 @@ func ScanDevice(hexAddr string) (*Device, error) {
 			ID:    c.SubsystemDeviceID,
 			Label: fmt.Sprintf("Subdevice %04x", c.SubsystemDeviceID),
 		}
-		fmt.Println(sp)
 		res.Subdevice = sp
 	}
 
