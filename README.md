@@ -19,10 +19,10 @@
 This library provides methods to get PCI information on a linux system.
 Similar projects with a wider featureset like [jaypipes/ghw](https://github.com/jaypipes/pcidb) exist,
 but I needed a library that focuses only on PCI and provides methods that
-assist in getting even more custom information (like `Device.SysfsPath()`).
+assist in getting even more custom information.
 
-If you are simply looking for a library to parse specifically PCI Devices,
-you will get a significant performance benefit (see [comparison](#Comparison)) by using this library. If you need
+If you are looking for a library to parse specifically PCI Devices,
+you will get a **significant performance benefit** by using this library (see [comparison](#Comparison)). If you need
 to parse more than just PCI information, consider using [jaypipes/ghw](https://github.com/jaypipes/pcidb).
 
 ## Usage
@@ -61,8 +61,8 @@ Device configuration is parsed directly as bytes (from `config`) instead of
 reading strings and parsing from there. This prevents unnecessary string
 allocationis and significantly improves performance.
 
-It has been found that this library parses **PCI Information** at more
-than 10x the speed and using more than 50x less memory when compared to
+It has been found that this library parses at more
+than 10x the speed while using 50x less memory compared to
 [jaypipes/ghw](https://github.com/jaypipes/pcidb).
 
 ```text
