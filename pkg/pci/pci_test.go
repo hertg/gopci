@@ -9,8 +9,10 @@ import (
 
 func TestMain(t *testing.T) {
 
-	devices, _ := pci.Scan()
+	classFilter := func(d *pci.Device) bool { return d.Class.Class == 0x03 }
+	devices, _ := pci.Scan(classFilter)
+	// devices, _ := pci.Scan(func(d *pci.Device) bool { return d.Class.Class == 0x03 })
 	for _, device := range devices {
-		fmt.Println(device.Device.Label)
+		fmt.Printf("%+v\n", device)
 	}
 }
