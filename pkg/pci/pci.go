@@ -4,11 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"path/filepath"
 
 	"github.com/hertg/go-pciids/pkg/pciids"
-	"github.com/hertg/gopci/pkg/addr"
-	"github.com/hertg/gopci/pkg/header"
 )
 
 const pciPath = "/sys/bus/pci/devices"
@@ -43,9 +40,10 @@ func Scan(filters ...func(*Device) bool) ([]*Device, error) {
 	if err != nil {
 		return nil, fmt.Errorf("got error while reading '%s': %s", pciPath, err)
 	}
-	var devices []*Device
+	devices := make([]*Device, len(files))
+	// var devices []*Device
 	for _, dir := range files {
-		dev, err := ScanDevice(dir.Name())
+		dev, err := ScanDeviceStr(dir.Name())
 		if err != nil {
 			return nil, fmt.Errorf("got error while scanning device '%s': %s", dir.Name(), err)
 		}
@@ -61,80 +59,4 @@ func Scan(filters ...func(*Device) bool) ([]*Device, error) {
 		}
 	}
 	return devices, nil
-}
-
-func ScanDevice(hexAddr string) (*Device, error) {
-	path := filepath.Join(pciPath, hexAddr)
-	addr, err := addr.AddrFromHex(hexAddr)
-	if err != nil {
-		return nil, err
-	}
-
-	configFile, err := os.Open(filepath.Join(path, "config"))
-	if err != nil {
-		return nil, fmt.Errorf("unable to open config file of '%s': %s", hexAddr, err)
-	}
-	defer configFile.Close()
-	config, err := header.Parse(configFile)
-	if err != nil {
-		return nil, err
-	}
-
-	driver, err := getDriver(path)
-	if err != nil {
-		return nil, err
-	}
-
-	class := Class{
-		Class:    config.ClassCode(),
-		Subclass: config.SubclassCode(),
-		Label:    fmt.Sprintf("Class %x", config.ClassCode()),
-	}
-	cl := db.FindSubclass(uint16(config.ClassCode())<<8 | uint16(config.SubclassCode()))
-	if cl != nil {
-		class.Label = *cl
-	}
-
-	v := db.Vendors[config.VendorID()]
-	vendor := Vendor{
-		ID:    config.VendorID(),
-		label: fmt.Sprintf("Vendor %2.x", config.VendorID()),
-	}
-	if v != nil {
-		vendor.label = v.Label
-	}
-
-	d := db.Devices[uint32(vendor.ID)<<16|uint32(config.DeviceID())]
-	device := Product{
-		ID:    config.DeviceID(),
-		Label: fmt.Sprintf("Device %2.x", config.DeviceID()),
-	}
-	if d != nil {
-		device.Label = d.Label
-	}
-
-	res := &Device{
-		Address: *addr,
-		Config:  config,
-		Driver:  *driver,
-		Device:  device,
-		Vendor:  vendor,
-		Class:   class,
-	}
-
-	if c, ok := config.(*header.StandardHeader); ok {
-		sv := &Vendor{
-			ID:    c.SubsystemVendorID,
-			label: fmt.Sprintf("Subvendor %04x", c.SubsystemVendorID),
-		}
-		res.Subvendor = sv
-
-		sp := &Product{
-			ID:    c.SubsystemDeviceID,
-			Label: fmt.Sprintf("Subdevice %04x", c.SubsystemDeviceID),
-		}
-		res.Subdevice = sp
-	}
-
-	return res, nil
 }

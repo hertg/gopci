@@ -16,3 +16,11 @@ func TestMain(t *testing.T) {
 		fmt.Printf("%+v\n", device)
 	}
 }
+
+func TestScanDevice(t *testing.T) {
+	dev, _ := pci.ScanDeviceStr("0000:2f:00.0")
+	fmt.Println(dev)
+
+	dev, err := pci.ScanDeviceStr("0001:00:00.0")
+	fmt.Println(err)
+}
