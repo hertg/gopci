@@ -15,7 +15,7 @@ type Device struct {
 	Driver    string
 	Class     Class
 	Vendor    Vendor
-	Device    Product
+	Product   Product
 	Subvendor *Vendor
 	Subdevice *Product
 }

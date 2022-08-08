@@ -74,7 +74,7 @@ func ScanDevice(addr *addr.Address) (*Device, error) {
 		Address: *addr,
 		Config:  config,
 		Driver:  *driver,
-		Device:  device,
+		Product: device,
 		Vendor:  vendor,
 		Class:   class,
 	}

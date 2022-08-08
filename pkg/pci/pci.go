@@ -40,8 +40,7 @@ func Scan(filters ...func(*Device) bool) ([]*Device, error) {
 	if err != nil {
 		return nil, fmt.Errorf("got error while reading '%s': %s", pciPath, err)
 	}
-	devices := make([]*Device, len(files))
-	// var devices []*Device
+	var devices []*Device
 	for _, dir := range files {
 		dev, err := ScanDeviceStr(dir.Name())
 		if err != nil {
