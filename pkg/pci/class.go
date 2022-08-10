@@ -8,6 +8,18 @@ type Class struct {
 	Label string `json:"label,omitempty"`
 }
 
+func (c *Class) Class() uint8 {
+	return uint8(c.ID >> 16 & 0b11111111)
+}
+
+func (c *Class) Subclass() uint8 {
+	return uint8(c.ID >> 8 & 0b11111111)
+}
+
+func (c *Class) Progif() uint8 {
+	return uint8(c.ID & 0b11111111)
+}
+
 func ParseClass(class uint8, subclass uint8, progif uint8) *Class {
 	combined := uint32(class)<<16 | uint32(subclass)<<8 | uint32(progif)
 	c := Class{
