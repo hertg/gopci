@@ -3,7 +3,7 @@ module github.com/hertg/gopci
 go 1.18
 
 require (
-	github.com/hertg/go-pciids v0.0.0-20220802201653-2679415a7941
+	github.com/hertg/go-pciids v0.0.1
 	github.com/stretchr/testify v1.8.0
 )
 
