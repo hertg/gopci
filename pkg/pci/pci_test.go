@@ -1,6 +1,7 @@
 package pci_test
 
 import (
+	"encoding/json"
 	"fmt"
 	"testing"
 
@@ -22,4 +23,11 @@ func TestScanDevice(t *testing.T) {
 
 	dev, err := pci.ScanDeviceStr("0001:00:00.0")
 	assert.NotNil(t, err)
+}
+
+func TestJson(t *testing.T) {
+	devices, _ := pci.Scan()
+	b, err := json.MarshalIndent(devices, "", "  ")
+	assert.Nil(t, err)
+	fmt.Println(string(b))
 }

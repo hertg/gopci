@@ -2,7 +2,7 @@ module github.com/hertg/gopci
 
 go 1.18
 
-//replace github.com/hertg/go-pciids => /home/michael/repos/go-pciids
+replace github.com/hertg/go-pciids => /home/michael/repos/go-pciids
 
 require (
 	github.com/hertg/go-pciids v0.0.0-20220802201653-2679415a7941

@@ -10,14 +10,14 @@ import (
 )
 
 type Device struct {
-	Address   addr.Address
-	Config    header.IConfig
-	Driver    string
-	Class     Class
-	Vendor    Vendor
-	Product   Product
-	Subvendor *Vendor
-	Subdevice *Product
+	Address   addr.Address  `json:"address,omitempty"`
+	Config    header.Config `json:"config,omitempty"`
+	Driver    *string       `json:"driver,omitempty"`
+	Class     Class         `json:"class,omitempty"`
+	Vendor    Vendor        `json:"vendor,omitempty"`
+	Product   Product       `json:"product,omitempty"`
+	Subvendor *Vendor       `json:"subvendor,omitempty"`
+	Subdevice *Product      `json:"subdevice,omitempty"`
 }
 
 func (s *Device) SysfsPath() string {

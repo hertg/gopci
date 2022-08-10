@@ -3,7 +3,7 @@ package header
 // Resources:
 // - https://wiki.osdev.org/PCI
 
-type IConfig interface {
+type Config interface {
 	// RawCommonHeader Retrieve the raw common header fields
 	// that are present in all header types
 	RawCommonHeader() CommonHeader

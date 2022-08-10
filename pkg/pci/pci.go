@@ -10,20 +10,9 @@ import (
 
 const pciPath = "/sys/bus/pci/devices"
 
-type Class struct {
-	Class    uint8
-	Subclass uint8
-	Label    string
-}
-
-type Vendor struct {
-	ID    uint16
-	label string
-}
-
-type Product struct {
-	ID    uint16
-	Label string
+type ProgrammingInterface struct {
+	ProgIf uint8  `json:"id,omitempty"`
+	Label  string `json:"label,omitempty"`
 }
 
 var db *pciids.DB
