@@ -17,8 +17,9 @@ func getDriver(path string) (*string, error) {
 	if err != nil && !os.IsNotExist(err) {
 		return nil, fmt.Errorf("unable to evaluate driver symlink '%s': %s", path, err)
 	}
-	if link != "" {
-		link = filepath.Base(link)
+	if link == "" {
+		return nil, nil
 	}
+	link = filepath.Base(link)
 	return &link, nil
 }
