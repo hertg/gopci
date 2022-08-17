@@ -26,7 +26,7 @@ func (s *Device) SysfsPath() string {
 
 func (s *Device) write(name string, b []byte) error {
 	path := filepath.Join(s.SysfsPath(), name)
-	f, err := os.OpenFile(path, os.O_TRUNC, 644)
+	f, err := os.OpenFile(path, os.O_WRONLY|os.O_TRUNC, 0220)
 	if err != nil {
 		return fmt.Errorf("unable to access %s: %s", path, err)
 	}
