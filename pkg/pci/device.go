@@ -32,25 +32,25 @@ func (s *Device) write(name string, b []byte) error {
 	}
 	_, err = f.Write(b)
 	if err != nil {
-		return fmt.Errorf("unable to enable device: %s", err)
+		return fmt.Errorf("unable to write: %s", err)
 	}
 	return nil
 }
 
 func (s *Device) Enable() error {
-	return s.write("enable", []byte{1})
+	return s.write("enable", []byte("1"))
 }
 
 func (s *Device) Remove() error {
-	return s.write("remove", []byte{1})
+	return s.write("remove", []byte("1"))
 }
 
 func (s *Device) Rescan() error {
-	return s.write("rescan", []byte{1})
+	return s.write("rescan", []byte("1"))
 }
 
 func (s *Device) Reset() error {
-	return s.write("reset", []byte{1})
+	return s.write("reset", []byte("1"))
 }
 
 // todo: current_link_speed
