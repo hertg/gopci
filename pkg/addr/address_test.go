@@ -9,10 +9,10 @@ import (
 
 func TestAddressParseDomain(t *testing.T) {
 	a, _ := addr.AddrFromHex("0000:2f:00.0")
-	assert.Equal(t, uint16(0), a.Domain())
+	assert.Equal(t, uint32(0), a.Domain())
 
 	a, _ = addr.AddrFromHex("00ab:2f:00.0")
-	assert.Equal(t, uint16(171), a.Domain())
+	assert.Equal(t, uint32(171), a.Domain())
 }
 
 func TestAddressParseBus(t *testing.T) {
@@ -44,7 +44,7 @@ func TestAddressParseFunction(t *testing.T) {
 	a, _ = addr.AddrFromHex("0000:2f:00.3")
 	assert.Equal(t, uint8(3), a.Function())
 
-	// the max number for  3-bit is 0x7 (7)
+	// the max number for 3-bit is 0x7 (7)
 	// any number higher than that is impossible
 	// and the parser is expected to return an error
 	a, err := addr.AddrFromHex("0000:2f:00.8")
@@ -68,7 +68,31 @@ func TestAddressParseBogusString(t *testing.T) {
 	_, err = addr.AddrFromHex("xyzx:ab:ab.0")
 	assert.Error(t, err)
 
-	// the max function num is 7, there this address is invalid
+	// the max function num is 7, this address is invalid
 	_, err = addr.AddrFromHex("aaaa:ab:1f.8")
+	assert.Error(t, err)
+}
+
+func TestAddressParse32bitDomain(t *testing.T) {
+	a, err := addr.AddrFromHex("10000:2f:00.0")
+	assert.NoError(t, err)
+	assert.NotNil(t, a)
+	assert.Equal(t, "10000", a.DomainHex())
+
+	a, err = addr.AddrFromHex("deadbeef:2f:00.0")
+	assert.NoError(t, err)
+	assert.NotNil(t, a)
+	assert.Equal(t, "deadbeef", a.DomainHex())
+}
+
+func TestAddressExactlyFull16bitDomain(t *testing.T) {
+	a, err := addr.AddrFromHex("ffff:2f:00.0")
+	assert.NoError(t, err)
+	assert.NotNil(t, a)
+	assert.Equal(t, "ffff", a.DomainHex())
+}
+
+func TestAddressParseTooLongDomain(t *testing.T) {
+	_, err := addr.AddrFromHex("1ffffffff:2f:00.0")
 	assert.Error(t, err)
 }

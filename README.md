@@ -23,7 +23,7 @@ assist in getting even more custom information.
 
 If you are looking for a library to parse specifically PCI Devices,
 you will get a **significant performance benefit** by using this library (see [comparison](#Comparison)). If you need
-to parse more than just PCI information, consider using [jaypipes/ghw](https://github.com/jaypipes/ghw).
+to parse more than just PCI information, you might also consider using [jaypipes/ghw](https://github.com/jaypipes/ghw).
 
 ## Usage
 
@@ -71,9 +71,9 @@ goarch: amd64
 pkg: github.com/hertg/gopci/pkg/pci
 cpu: AMD Ryzen 9 5950X 16-Core Processor
 BenchmarkGoPci
-BenchmarkGoPci-32            499           2426047 ns/op          267106 B/op       4355 allocs/op
+BenchmarkGoPci-32            518           2554827 ns/op          297709 B/op       5178 allocs/op
 BenchmarkGhw
-BenchmarkGhw-32               38          33902755 ns/op        15745488 B/op     200981 allocs/op
+BenchmarkGhw-32               34          33286659 ns/op        15745188 B/op     201189 allocs/op
 PASS
 ok      github.com/hertg/gopci/pkg/pci  2.802s
 ```
