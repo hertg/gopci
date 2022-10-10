@@ -21,10 +21,8 @@ It has been created as a minimalistic and more performant alternative to
 the pci parsing capabilities of [jaypipes/ghw](https://github.com/jaypipes/ghw).
 
 If you need non-pci or non-linux hardware information,
-[jaypipes/ghw](https://github.com/jaypipes/ghw) offers an all-in-one solution.
-If you simply care about linux pci information, this library offers a
-**significant performance benefit** over [jaypipes/ghw](https://github.com/jaypipes/ghw)
-(see [comparison](#Comparison)).
+ghw offers an all-in-one solution. If you simply care about linux pci information,
+this library offers a **significant performance benefit** over ghw (see [comparison](#Comparison)).
 
 ## Usage
 
