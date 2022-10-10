@@ -17,13 +17,14 @@
 ## Description
 
 This library provides methods to get PCI information on a linux system.
-Similar projects with a wider featureset like [jaypipes/ghw](https://github.com/jaypipes/ghw) exist,
-but I needed a library that focuses only on PCI and provides methods that
-assist in getting even more custom information.
+It has been created as a minimalistic and more performant alternative to
+the pci parsing capabilities of [jaypipes/ghw](https://github.com/jaypipes/ghw).
 
-If you are looking for a library to parse specifically PCI Devices,
-you will get a **significant performance benefit** by using this library (see [comparison](#Comparison)). If you need
-to parse more than just PCI information, you might also consider using [jaypipes/ghw](https://github.com/jaypipes/ghw).
+If you need non-pci or non-linux hardware information,
+[jaypipes/ghw](https://github.com/jaypipes/ghw) offers an all-in-one solution.
+If you simply care about linux pci information, this library offers a
+**significant performance benefit** over [jaypipes/ghw](https://github.com/jaypipes/ghw)
+(see [comparison](#Comparison)).
 
 ## Usage
 
